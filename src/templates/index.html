@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Spor Salonu Uyelik Yonetimi</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #f4f6f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        input, select, button { padding: 8px 12px; margin-right: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #27ae60; color: white; border: none; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Spor Salonu Uyelik Takip Sistemi</h1>
+    <div class="card">
+        <h3>Yeni Uye Kaydi</h3>
+        <form action="/add" method="POST">
+            <input type="text" name="name" placeholder="Ad Soyad" required>
+            <select name="plan">
+                <option value="1 Aylik">1 Aylik Paket</option>
+                <option value="3 Aylik">3 Aylik Paket</option>
+                <option value="12 Aylik">12 Aylik Paket</option>
+            </select>
+            <input type="date" name="end_date" required>
+            <button type="submit">Uye Ekle</button>
+        </form>
+    </div>
+    <div class="card">
+        <h3>Kayitli Uyeler</h3>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Ad Soyad</th><th>Paket</th><th>Bitis Tarihi</th><th>Durum</th></tr>
+            </thead>
+            <tbody>
+                {% for m in members %}
+                <tr>
+                    <td>{{ m.id }}</td>
+                    <td>{{ m.name }}</td>
+                    <td>{{ m.plan }}</td>
+                    <td>{{ m.end_date }}</td>
+                    <td>{{ m.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
