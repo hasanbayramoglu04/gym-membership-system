@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Spor Salonu Uyelik Yonetim Sistemi</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 960px; margin: 30px auto; padding: 0 20px; background: #f0f2f5; color: #2c3e50; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        input, select, button { padding: 8px 12px; margin-right: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        button { background: #27ae60; color: white; border: none; cursor: pointer; }
+        button:hover { opacity: 0.9; }
+        .btn-checkin { background: #8e44ad; }
+        .btn-renew { background: #2980b9; }
+        .btn-delete { background: #c0392b; }
+        .alert { padding: 12px 16px; border-radius: 6px; margin-bottom: 18px; font-weight: 500; }
+        .alert.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert.info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #f8f9fa; }
+        .badge-active { color: #27ae60; font-weight: bold; }
+        .badge-expired { color: #c0392b; font-weight: bold; }
+        .actions form { display: inline-block; }
+    </style>
+</head>
+<body>
+    <h1>Spor Salonu Uyelik ve Giris Takip Sistemi</h1>
+
+    {% if msg %}
+    <div class="alert {{ msg_type }}">{{ msg }}</div>
+    {% endif %}
+
+    <div class="card">
+        <h3>Yeni Uye Kaydi</h3>
+        <form action="/add" method="POST">
+            <input type="text" name="name" placeholder="Ad Soyad" required>
+            <input type="text" name="phone" placeholder="Telefon (05xx...)">
+            <select name="plan">
+                <option value="1 Aylik">1 Aylik Paket</option>
+                <option value="3 Aylik">3 Aylik Paket</option>
+                <option value="12 Aylik">12 Aylik Paket</option>
+            </select>
+            <input type="date" name="end_date" required>
+            <button type="submit">Uye Ekle</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Kayitli Uyeler ve Giris Kontrolu</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ad Soyad</th>
+                    <th>Telefon</th>
+                    <th>Paket</th>
+                    <th>Bitis Tarihi</th>
+                    <th>Durum</th>
+                    <th>Giris Kaydi</th>
+                    <th>Islemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in members %}
+                <tr>
+                    <td>{{ m.id }}</td>
+                    <td><strong>{{ m.name }}</strong></td>
+                    <td>{{ m.phone }}</td>
+                    <td>{{ m.plan }}</td>
+                    <td>{{ m.end_date }}</td>
+                    <td>
+                        {% if m.is_active %}
+                            <span class="badge-active">Aktif</span>
+                        {% else %}
+                            <span class="badge-expired">Suresi Dolmus</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ m.visit_count }} kez<br><small style="color:#777;">{{ m.last_visit }}</small></td>
+                    <td class="actions">
+                        <form action="/checkin/{{ m.id }}" method="POST">
+                            <button type="submit" class="btn-checkin">Salona Giris</button>
+                        </form>
+                        <form action="/renew/{{ m.id }}" method="POST">
+                            <button type="submit" class="btn-renew">+30 Gun</button>
+                        </form>
+                        <form action="/delete/{{ m.id }}" method="POST">
+                            <button type="submit" class="btn-delete">Sil</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
