@@ -33,35 +33,6 @@ def init_db():
             last_visit TEXT DEFAULT 'Henuz giris yok'
         )
     """)
-  cursor.execute("SELECT COUNT(*) FROM members")
-  if cursor.fetchone()[0] == 0:
-    today = datetime.now().strftime("%Y-%m-%d")
-    yesterday = (datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")
-    next_month = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
-    cursor.execute(
-        "INSERT INTO members (name, phone, plan, end_date, visit_count,"
-        " last_visit) VALUES (?, ?, ?, ?, ?, ?)",
-        (
-            "Ahmet Yilmaz",
-            "0555 111 2233",
-            "3 Aylik",
-            next_month,
-            12,
-            f"{today} 09:30",
-        ),
-    )
-    cursor.execute(
-        "INSERT INTO members (name, phone, plan, end_date, visit_count,"
-        " last_visit) VALUES (?, ?, ?, ?, ?, ?)",
-        (
-            "Ayse Demir",
-            "0555 444 5566",
-            "1 Aylik",
-            yesterday,
-            5,
-            f"{yesterday} 18:15",
-        ),
-    )
   conn.commit()
   conn.close()
 
